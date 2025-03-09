@@ -44,7 +44,7 @@ const initialCart: CartProduct[] = [
 
 function App() {
     const [cart, setCart] = useState<CartProduct[]>(initialCart)
-    const [isOrderConfirmed, setIsOrderConfirmed] = useState(true)
+    const [isOrderConfirmed, setIsOrderConfirmed] = useState(false)
 
     const isProductInCart = (productId: number) => !!cart.find(ci => ci.productId === productId)
     const numProductsInCart = (productId: number) => cart.find(ci => ci.productId === productId)?.quantity ?? 0
@@ -73,19 +73,51 @@ function App() {
                                     <button
                                         className="decreaseQuantity"
                                         onClick={() => {
-                                            console.log("foo")
+                                            setCart(cart => {
+                                                const currentItem = cart.find(c => c.productId === product.id)
+                                                if (!currentItem) return cart
+
+                                                const otherItems = cart.filter(c => c.productId !== product.id)
+                                                if (currentItem.quantity === 1) return otherItems
+
+                                                return [
+                                                    ...cart.filter(c => c.productId !== product.id),
+                                                    {
+                                                        ...currentItem,
+                                                        quantity: currentItem.quantity - 1
+                                                    }
+                                                ]
+                                            })
                                         }}
                                     ></button>
                                     {numProductsInCart(product.id)}
                                     <button
                                         className="increaseQuantity"
                                         onClick={() => {
-                                            console.log("bar")
+                                            setCart(cart => {
+                                                const currentItem = cart.find(c => c.productId === product.id)
+                                                if (!currentItem) return cart
+
+                                                return [
+                                                    ...cart.filter(c => c.productId !== product.id),
+                                                    {
+                                                        ...currentItem,
+                                                        quantity: currentItem.quantity + 1
+                                                    }
+                                                ]
+                                            })
                                         }}
                                     ></button>
                                 </div>
                             ) : (
-                                <button>
+                                <button onClick={() => {
+                                    setCart(cart => {
+                                        return [
+                                            ...cart,
+                                            {productId: product.id, quantity: 1}
+                                        ]
+                                    })
+                                }}>
                                     <span></span>
                                     Add to Cart
                                 </button>
@@ -108,7 +140,11 @@ function App() {
 
                         <div id="cartTotal">
                             <p className="text-4">Order Total</p>
-                            <strong className="text-2">$46.50</strong>
+                            <strong className="text-2">${cart.reduce((a, c) => {
+                                const product = products.find(p => p.id === c.productId)
+                                if (undefined === product) return a
+                                return a + product.price * c.quantity
+                            }, 0)}</strong>
                         </div>
 
                         <div id="cartFootnote">

@@ -198,7 +198,7 @@ body {
 
 #cart {
     background: #fff;
-    border-radius: 1.25em;
+    border-radius: 1em;
     padding: 1em 1.5em;
     color: var(--rose-500);
     text-align: left;
@@ -228,8 +228,8 @@ body {
 
 #cart li button {
     margin-left: auto;
-    width: 1.25em;
-    height: 1.25em;
+    width: 2em;
+    height: 2em;
     border-radius: 50%;
     border: 1px solid var(--rose-400);
     display: flex;
