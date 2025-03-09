@@ -226,6 +226,17 @@ body {
     align-items: center;
 }
 
+#cart li.removing {
+    animation: slideOut 0.3s ease-out forwards;
+}
+
+@keyframes slideOut {
+    to {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+}
+
 #cart li button {
     margin-left: auto;
     width: 2em;
@@ -235,6 +246,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
 }
 
 .cartQuantity {

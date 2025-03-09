@@ -1,5 +1,5 @@
 import './screen.css'
-import {useState} from "react";
+import {useRef, useState} from "react";
 
 type Product = {
     id: number
@@ -139,7 +139,13 @@ function App() {
                         <h2 className="text-2">Your Cart ({cart.length})</h2>
                         <ul>
                             {cart.map(cartProduct => (
-                                <CartProduct productId={cartProduct.productId} quantity={cartProduct.quantity} />
+                                <CartProduct
+                                    productId={cartProduct.productId}
+                                    quantity={cartProduct.quantity}
+                                    onDelete={() => {
+                                        setCart(cart => cart.filter(c => c.productId !== cartProduct.productId))
+                                    }}
+                                />
                             ))}
                         </ul>
 
@@ -187,17 +193,28 @@ export default App
 function CartProduct({productId, quantity, onDelete}: { productId: number, quantity: number, onDelete: () => void}) {
     const product = products.find(p => p.id == productId)
     const subtotal = product ? product.price * quantity : 0
+    const rowRef = useRef<HTMLLIElement>(null);
+
+    const handleDelete = () => {
+        if (rowRef.current) {
+            rowRef.current.classList.add('removing')
+
+            setTimeout(() => {
+                onDelete()
+            }, 300)
+        }
+    }
 
     return product ? (
-        <li key={productId}>
+        <li key={productId} ref={rowRef}>
             <div className="cartLineItem">
                 <h3 className="text-4-bold">{product.longName}</h3>
                 <span className="cartQuantity text-4-bold">{quantity}x</span>
                 @ ${product.price.toFixed(2)}
                 <strong className="text-4-bold">${subtotal.toFixed(2)}</strong>
             </div>
-            <button>
-                <img src="/images/icon-remove-item.svg"/>
+            <button onClick={handleDelete}>
+                <img src="/images/icon-remove-item.svg" alt="Remove item" />
             </button>
         </li>
     ) : undefined
