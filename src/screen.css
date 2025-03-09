@@ -1,0 +1,158 @@
+/* start reset */
+
+html, body, div, p, h1, h2, h3, h4, h5, h6,
+ul, ol, li, dl, dt, dd, form, fieldset, caption, legend,
+table, tr, td, th, address, blockquote, img {
+    margin: 0;
+    padding: 0;
+}
+
+img, fieldset {
+    border: none;
+}
+
+blockquote, q {
+    quotes: none;
+}
+
+html {
+    box-sizing: border-box;
+}
+
+*, *::before, *::after {
+    box-sizing: inherit;
+}
+
+button, label, summary {
+    cursor: pointer;
+}
+
+body, button, input, table, textarea, select {
+    font-size: 1rem;
+    line-height: 1.5;
+    font-family: inherit;
+}
+
+button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+ul {
+    list-style: none;
+}
+
+/* end reset */
+
+:root {
+    --red: hsl(14, 86%, 42%);
+    --rose-900: hsl(14, 65%, 9%);
+    --rose-500: hsl(12, 20%, 44%);
+    --rose-400: hsl(7, 20%, 60%);
+    --rose-300: hsl(14, 25%, 72%);
+    --rose-100: hsl(13, 31%, 94%);
+    --rose-50: hsl(20, 50%, 98%);
+    --green: hsl(159, 69%, 38%);
+}
+
+body {
+    background: #fafafa;
+    font: 400 1rem/1.5 "Red Hat Text", sans-serif;
+}
+
+.text-1 {
+    font: 700 2.5rem/1.2 "Red Hat Text", sans-serif;
+    letter-spacing: 0;
+}
+
+.text-2 {
+    font: 700 1.5rem/1.25 "Red Hat Text", sans-serif;
+    letter-spacing: 0;
+}
+
+.text-3 {
+    font: 600 1rem/1.5 "Red Hat Text", sans-serif;
+    letter-spacing: 0;
+}
+
+.text-4 {
+    font: 400 .875em/1.5 "Red Hat Text", sans-serif;
+    letter-spacing: 0;
+}
+
+.text-4-bold {
+    font: 600 .875em/1.5 "Red Hat Text", sans-serif;
+    letter-spacing: 0;
+}
+
+#container {
+    display: flex;
+    flex-direction: column;
+    padding: 1em 1.5em;
+    row-gap: 1.5em;
+}
+
+#productList {
+    display: flex;
+    flex-direction: column;
+    row-gap: 2em;
+}
+
+#productList img {
+    display: block;
+    width: 100%;
+    border-radius: 1em;
+}
+
+#productList button {
+    width: 11.4375em;
+    height: 3.1875em;
+    background: #fff;
+    margin: -1.5em auto 1em;
+    position: relative;
+    border-radius: 2em;
+    border: 1px solid var(--rose-400);
+    font-size: .875em;
+    font-family: "Red Hat Text", sans-serif;
+    font-weight: 600;
+    color: var(--rose-900);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5em;
+}
+
+#productList button span {
+    display: block;
+    width: 21px;
+    height: 20px;
+    background: url(/images/icon-add-to-cart.svg) 0 0 no-repeat;
+}
+
+#productList .price {
+    color: var(--red);
+}
+
+#productList small {
+    color: var(--rose-500);
+}
+
+#cart {
+    background: #fff;
+    border-radius: 1.25em;
+    padding: 1em 1.5em;
+    text-align: center;
+    color: var(--rose-500);
+}
+
+#cart h2 {
+    color: var(--red);
+}
+
+#cart #emptyImg {
+    width: 8em;
+    height: 8em;
+    display: block;
+    margin: 0 auto;
+}
