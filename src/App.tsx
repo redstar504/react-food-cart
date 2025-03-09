@@ -2,29 +2,46 @@ import './screen.css'
 import {useState} from "react";
 
 type Product = {
+    id: number
     shortName: string
     longName: string
     price: number
-    image: string
+    imageName: string
+}
+
+type CartProduct = {
+    productId: number
+    quantity: number
 }
 
 const products: Product[] = [
     {
+        id: 1,
         shortName: 'Waffle',
         longName: 'Waffle with Berries',
         price: 6.50,
-        image: 'image-waffle-mobile.jpg',
+        imageName: 'waffle',
     },
     {
+        id: 2,
         shortName: 'Créme Brûlée',
         longName: 'Vanilla Bean Créme Brûlée',
         price: 7.00,
-        image: 'image-creme-brulee-mobile.jpg'
+        imageName: 'creme-brulee'
+    }
+]
+
+const initialCart: CartProduct[] = [
+    {
+        productId: 1,
+        quantity: 2
     }
 ]
 
 function App() {
-    const [cart, setCart] = useState<Product[]>([])
+    const [cart, setCart] = useState<CartProduct[]>(initialCart)
+    const isProductInCart = (productId: number) => !!cart.find(ci => ci.productId === productId)
+    const numProductsInCart = (productId: number) => cart.find(ci => ci.productId === productId)?.quantity ?? 0
 
     return (
         <>
@@ -35,14 +52,26 @@ function App() {
 
                 <ul id="productList">
                     {products.map(product => (
-                        <li>
+                        <li key={product.id} className={isProductInCart(product.id) ? 'selected' : ''}>
                             <a href="#">
-                                <img src={`images/${product.image}`} alt="Waffle"/>
+                                <picture>
+                                    <source srcSet={`images/image-${product.imageName}-desktop.jpg`} media="(min-width: 768px)" />
+                                    <source srcSet={`images/image-${product.imageName}-tablet.jpg`} media="(min-width: 480px)" />
+                                    <img src={`images/image-${product.imageName}-mobile.jpg`} alt="Waffle" />
+                                </picture>
                             </a>
-                            <button>
-                                <span></span>
-                                Add to Cart
-                            </button>
+                            {isProductInCart(product.id) ? (
+                                <div className="cartControlButton">
+                                    <button className="decreaseQuantity"></button>
+                                    {numProductsInCart(product.id)}
+                                    <button className="increaseQuantity"></button>
+                                </div>
+                            ) : (
+                                <button>
+                                    <span></span>
+                                    Add to Cart
+                                </button>
+                            )}
                             <small className="text-4">{product.shortName}</small>
                             <h2 className="text-3">{product.longName}</h2>
                             <p className="text-3 price">${product.price.toFixed(2)}</p>
