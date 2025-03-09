@@ -48,6 +48,11 @@ function App() {
 
     const isProductInCart = (productId: number) => !!cart.find(ci => ci.productId === productId)
     const numProductsInCart = (productId: number) => cart.find(ci => ci.productId === productId)?.quantity ?? 0
+    const cartTotal = cart.reduce((a, c) => {
+        const product = products.find(p => p.id === c.productId)
+        if (undefined === product) return a
+        return a + product.price * c.quantity
+    }, 0)
 
     return (
         <>
@@ -140,11 +145,7 @@ function App() {
 
                         <div id="cartTotal">
                             <p className="text-4">Order Total</p>
-                            <strong className="text-2">${cart.reduce((a, c) => {
-                                const product = products.find(p => p.id === c.productId)
-                                if (undefined === product) return a
-                                return a + product.price * c.quantity
-                            }, 0)}</strong>
+                            <strong className="text-2">${Number.isInteger(cartTotal) ? cartTotal : cartTotal.toFixed(2)}</strong>
                         </div>
 
                         <div id="cartFootnote">
@@ -183,7 +184,7 @@ function App() {
 
 export default App
 
-function CartProduct({productId, quantity}: { productId: number, quantity: number}) {
+function CartProduct({productId, quantity, onDelete}: { productId: number, quantity: number, onDelete: () => void}) {
     const product = products.find(p => p.id == productId)
     const subtotal = product ? product.price * quantity : 0
 
