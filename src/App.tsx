@@ -1,5 +1,6 @@
 import './screen.css'
 import {useEffect, useRef, useState} from "react";
+import * as React from "react";
 
 type Product = {
     id: number
@@ -47,7 +48,8 @@ const initialCart: CartProduct[] = [
 
 function App() {
     const [cart, setCart] = useState<CartProduct[]>(initialCart)
-    const [isOrderConfirmed, setIsOrderConfirmed] = useState(true)
+    const [isOrderConfirmed, setIsOrderConfirmed] = useState(false)
+    const modalRef = useRef<HTMLDivElement>(null);
 
     const isProductInCart = (productId: number) => !!cart.find(ci => ci.productId === productId)
     const numProductsInCart = (productId: number) => cart.find(ci => ci.productId === productId)?.quantity ?? 0
@@ -58,12 +60,15 @@ function App() {
     }, 0)
 
     useEffect(() => {
+        const currentModalRef = modalRef.current
+
         if (isOrderConfirmed) {
             document.body.classList.add('lock')
-            return
+            if (currentModalRef) currentModalRef.classList.add('open')
+        } else {
+            if (currentModalRef) currentModalRef.classList.remove('open')
+            document.body.classList.remove('lock')
         }
-
-        document.body.classList.remove('lock')
     }, [isOrderConfirmed])
 
     return (
@@ -176,7 +181,7 @@ function App() {
                         <button
                             id="confirmOrder"
                             className="text-3"
-                            onClick={() => setIsOrderConfirmed(v => !v)}
+                            onClick={() => setIsOrderConfirmed(true)}
                         >
                             Confirm Order
                         </button>
@@ -190,43 +195,11 @@ function App() {
                 )}
 
                 {isOrderConfirmed && (
-                    <>
-                        <div id="overlay" onClick={() => setIsOrderConfirmed(false)}></div>
-                        <div className="modal">
-                            <img src="/images/icon-order-confirmed.svg" alt="Order confirmed"/>
-                            <h2 className="text-1">Order<br/>Confirmed</h2>
-                            <p>We hope you enjoy your food!</p>
-                            <div id="summaryWrapper">
-                                <ul className="orderSummary">
-                                    <li>
-                                        <img src="/images/image-meringue-thumbnail.jpg" alt="Thumbnail"/>
-                                        <div>
-                                            <h3 className="text-4-bold">Classic Tiramisu</h3>
-                                            <span className="text-4-bold">1x</span> @ $5.50
-                                        </div>
-                                        <strong className="text-3">$5.50</strong>
-                                    </li>
-                                    <li>
-                                        <img src="/images/image-creme-brulee-thumbnail.jpg" alt="Thumbnail"/>
-                                        <div>
-                                            <h3 className="text-4-bold">Creme Brulee</h3>
-                                            <span className="text-4-bold">4x</span> @ $7.00
-                                        </div>
-                                        <strong className="text-3">$28.00</strong>
-                                    </li>
-                                </ul>
-                                <div id="summaryTotal">
-                                    <p className="text-4">Order Total</p>
-                                    <strong className="text-2">$46.50</strong>
-                                </div>
-                            </div>
-                            <button
-                                id="restartOrder"
-                                className="text-3"
-                                onClick={() => setIsOrderConfirmed(true)}
-                            >Start New Order</button>
-                        </div>
-                    </>
+                    <Modal
+                        setCart={setCart}
+                        setIsOrderConfirmed={setIsOrderConfirmed}
+                        modalRef={modalRef}
+                    />
                 )}
             </div>
         </>
@@ -234,6 +207,67 @@ function App() {
 }
 
 export default App
+
+type ModalPropsType = {
+    setCart: React.Dispatch<React.SetStateAction<CartProduct[]>>,
+    setIsOrderConfirmed: React.Dispatch<React.SetStateAction<boolean>>,
+    modalRef: React.RefObject<HTMLDivElement | null>
+}
+
+function Modal({setCart, setIsOrderConfirmed, modalRef}: ModalPropsType) {
+    const handleClose = () => {
+        const currentRef = modalRef.current
+        if (!currentRef) return
+        currentRef.classList.remove('open')
+        currentRef.classList.add('closing')
+        setTimeout(() => {
+            setIsOrderConfirmed(false)
+        }, 200)
+    }
+
+    return (
+        <>
+            <div id="overlay" onClick={handleClose}></div>
+            <div className="modal" ref={modalRef}>
+                <img src="/images/icon-order-confirmed.svg" alt="Order confirmed"/>
+                <h2 className="text-1">Order<br/>Confirmed</h2>
+                <p>We hope you enjoy your food!</p>
+                <div id="summaryWrapper">
+                    <ul className="orderSummary">
+                        <li>
+                            <img src="/images/image-meringue-thumbnail.jpg" alt="Thumbnail"/>
+                            <div>
+                                <h3 className="text-4-bold">Classic Tiramisu</h3>
+                                <span className="text-4-bold">1x</span> @ $5.50
+                            </div>
+                            <strong className="text-3">$5.50</strong>
+                        </li>
+                        <li>
+                            <img src="/images/image-creme-brulee-thumbnail.jpg" alt="Thumbnail"/>
+                            <div>
+                                <h3 className="text-4-bold">Creme Brulee</h3>
+                                <span className="text-4-bold">4x</span> @ $7.00
+                            </div>
+                            <strong className="text-3">$28.00</strong>
+                        </li>
+                    </ul>
+                    <div id="summaryTotal">
+                        <p className="text-4">Order Total</p>
+                        <strong className="text-2">$46.50</strong>
+                    </div>
+                </div>
+                <button
+                    id="restartOrder"
+                    className="text-3"
+                    onClick={() => {
+                        setCart([])
+                        handleClose()
+                    }}
+                >Start New Order</button>
+            </div>
+        </>
+    )
+}
 
 function CartProduct({productId, quantity, onDelete}: { productId: number, quantity: number, onDelete: () => void }) {
     const product = products.find(p => p.id == productId)
