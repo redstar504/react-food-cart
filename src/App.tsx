@@ -158,6 +158,7 @@ function App() {
                         <ul>
                             {cart.map(cartProduct => (
                                 <CartProduct
+                                    key={cartProduct.productId}
                                     productId={cartProduct.productId}
                                     quantity={cartProduct.quantity}
                                     onDelete={() => {
@@ -242,7 +243,7 @@ function Modal({cart, setCart, setIsOrderConfirmed, modalRef}: ModalPropsType) {
                             const subtotal = product.price * cartProduct.quantity
 
                             return (
-                                <li>
+                                <li key={cartProduct.productId}>
                                     <img src="/images/image-meringue-thumbnail.jpg" alt="Thumbnail"/>
                                     <div>
                                         <h3 className="text-4-bold">{product.longName}</h3>
