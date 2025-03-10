@@ -1,5 +1,5 @@
 import './screen.css'
-import {useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 
 type Product = {
     id: number
@@ -44,7 +44,7 @@ const initialCart: CartProduct[] = [
 
 function App() {
     const [cart, setCart] = useState<CartProduct[]>(initialCart)
-    const [isOrderConfirmed, setIsOrderConfirmed] = useState(false)
+    const [isOrderConfirmed, setIsOrderConfirmed] = useState(true)
 
     const isProductInCart = (productId: number) => !!cart.find(ci => ci.productId === productId)
     const numProductsInCart = (productId: number) => cart.find(ci => ci.productId === productId)?.quantity ?? 0
@@ -54,9 +54,18 @@ function App() {
         return a + product.price * c.quantity
     }, 0)
 
+    useEffect(() => {
+        if (isOrderConfirmed) {
+            document.body.classList.add('lock')
+            return
+        }
+
+        document.body.classList.remove('lock')
+    }, [isOrderConfirmed])
+
     return (
         <>
-            <div id="container">
+            <div id="container" className={isOrderConfirmed ? 'confirming' : ''}>
                 <h1 className="text-1">
                     Desserts
                 </h1>
@@ -179,7 +188,19 @@ function App() {
                     <>
                         <div id="overlay" onClick={() => setIsOrderConfirmed(false)}></div>
                         <div className="modal">
-                            <p>Hello worlds</p>
+                            <img src="/images/icon-order-confirmed.svg" />
+                            <h2 className="text-1">Order<br />Confirmed</h2>
+                            <p>We hope you enjoy your food!</p>
+                            <ul className="orderSummary">
+                                <li>
+                                    <img src="/images/image-meringue-thumbnail.jpg" alt="Thumbnail" />
+                                    <div>
+                                        <h3 className="text-4-bold">Classic Tiramisu</h3>
+                                        <span className="text-4-bold">1x</span> @ $5.50
+                                    </div>
+                                    <strong className="text-3">$5.50</strong>
+                                </li>
+                            </ul>
                         </div>
                     </>
                 )}

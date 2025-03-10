@@ -44,24 +44,17 @@ ul {
 }
 
 /* end reset */
-
 html, body, #root {
     height: 100%;
+}
+
+body.lock {
+    overflow: hidden;
 }
 
 #container {
     min-height: 100%;
     position: relative;
-}
-
-.modal {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 80%;
-    background: #fff;
-    border-radius: 1.25em;
 }
 
 #overlay {
@@ -301,4 +294,60 @@ body {
     body {
         background: orange;
     }
+}
+
+.modal {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 80%;
+    background: #fff;
+    border-radius: 1.25em;
+    padding: 2em 1em;
+    display: flex;
+    flex-direction: column;
+    row-gap: 1em;
+}
+
+.modal h2 + p {
+    color: var(--rose-500)
+}
+
+.modal img {
+    width: 48px;
+    height: 48px;
+}
+
+.orderSummary {
+    background: var(--rose-50);
+    display: flex;
+    border-radius: 1em;
+    padding: 1.5em;
+}
+
+.orderSummary li {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    column-gap: 1em;
+}
+
+.orderSummary li strong {
+    margin-left: auto;
+}
+
+.orderSummary li div {
+    display: flex;
+    flex-wrap: wrap;
+    color: var(--rose-500);
+    column-gap: 1em;
+}
+
+.orderSummary li div h3 {
+    flex-basis: 100%;
+}
+
+.orderSummary li div span {
+    color: var(--red);
 }
