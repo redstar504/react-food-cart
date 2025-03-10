@@ -274,6 +274,13 @@ body {
     border-radius: 1.25em;
     height: 3.25em;
     line-height: 3.25em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#cartFootnote p {
+    line-height: 0em;
 }
 
 #confirmOrder {

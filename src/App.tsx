@@ -7,6 +7,7 @@ type Product = {
     longName: string
     price: number
     imageName: string
+    quantityAvailable: number
 }
 
 type CartProduct = {
@@ -21,13 +22,15 @@ const products: Product[] = [
         longName: 'Waffle with Berries',
         price: 6.50,
         imageName: 'waffle',
+        quantityAvailable: 10
     },
     {
         id: 2,
         shortName: 'Créme Brûlée',
         longName: 'Vanilla Bean Créme Brûlée',
         price: 7.00,
-        imageName: 'creme-brulee'
+        imageName: 'creme-brulee',
+        quantityAvailable: 10
     }
 ]
 
@@ -110,14 +113,15 @@ function App() {
                                         onClick={() => {
                                             setCart(cart => {
                                                 const currentItem = cart.find(c => c.productId === product.id)
-                                                if (!currentItem) return cart
+                                                const quantityAvailable = products.find(p => p.id === product.id)?.quantityAvailable
+                                                if (!currentItem || !quantityAvailable) return cart
+
+                                                const newQuantity = currentItem.quantity + 1
+                                                if (newQuantity > quantityAvailable) return cart
 
                                                 return [
                                                     ...cart.filter(c => c.productId !== product.id),
-                                                    {
-                                                        ...currentItem,
-                                                        quantity: currentItem.quantity + 1
-                                                    }
+                                                    {...currentItem, quantity: newQuantity}
                                                 ]
                                             })
                                         }}
@@ -160,12 +164,13 @@ function App() {
 
                         <div id="cartTotal">
                             <p className="text-4">Order Total</p>
-                            <strong className="text-2">${Number.isInteger(cartTotal) ? cartTotal : cartTotal.toFixed(2)}</strong>
+                            <strong
+                                className="text-2">${Number.isInteger(cartTotal) ? cartTotal : cartTotal.toFixed(2)}</strong>
                         </div>
 
                         <div id="cartFootnote">
-                            <img src="/images/icon-carbon-neutral.svg" alt="Carbon Neutral" />
-                            This is a <strong className="text-4-bold ">carbon-neutral</strong> delivery
+                            <img src="/images/icon-carbon-neutral.svg" alt="Carbon Neutral"/>
+                            <p>This is a <strong className="text-4-bold ">carbon-neutral</strong> delivery.</p>
                         </div>
 
                         <button
@@ -184,16 +189,16 @@ function App() {
                     </div>
                 )}
 
-                { isOrderConfirmed && (
+                {isOrderConfirmed && (
                     <>
                         <div id="overlay" onClick={() => setIsOrderConfirmed(false)}></div>
                         <div className="modal">
-                            <img src="/images/icon-order-confirmed.svg" />
-                            <h2 className="text-1">Order<br />Confirmed</h2>
+                            <img src="/images/icon-order-confirmed.svg"/>
+                            <h2 className="text-1">Order<br/>Confirmed</h2>
                             <p>We hope you enjoy your food!</p>
                             <ul className="orderSummary">
                                 <li>
-                                    <img src="/images/image-meringue-thumbnail.jpg" alt="Thumbnail" />
+                                    <img src="/images/image-meringue-thumbnail.jpg" alt="Thumbnail"/>
                                     <div>
                                         <h3 className="text-4-bold">Classic Tiramisu</h3>
                                         <span className="text-4-bold">1x</span> @ $5.50
@@ -211,7 +216,7 @@ function App() {
 
 export default App
 
-function CartProduct({productId, quantity, onDelete}: { productId: number, quantity: number, onDelete: () => void}) {
+function CartProduct({productId, quantity, onDelete}: { productId: number, quantity: number, onDelete: () => void }) {
     const product = products.find(p => p.id == productId)
     const subtotal = product ? product.price * quantity : 0
     const rowRef = useRef<HTMLLIElement>(null);
@@ -235,7 +240,7 @@ function CartProduct({productId, quantity, onDelete}: { productId: number, quant
                 <strong className="text-4-bold">${subtotal.toFixed(2)}</strong>
             </div>
             <button onClick={handleDelete}>
-                <img src="/images/icon-remove-item.svg" alt="Remove item" />
+                <img src="/images/icon-remove-item.svg" alt="Remove item"/>
             </button>
         </li>
     ) : undefined
