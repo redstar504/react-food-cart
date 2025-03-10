@@ -193,19 +193,38 @@ function App() {
                     <>
                         <div id="overlay" onClick={() => setIsOrderConfirmed(false)}></div>
                         <div className="modal">
-                            <img src="/images/icon-order-confirmed.svg"/>
+                            <img src="/images/icon-order-confirmed.svg" alt="Order confirmed"/>
                             <h2 className="text-1">Order<br/>Confirmed</h2>
                             <p>We hope you enjoy your food!</p>
-                            <ul className="orderSummary">
-                                <li>
-                                    <img src="/images/image-meringue-thumbnail.jpg" alt="Thumbnail"/>
-                                    <div>
-                                        <h3 className="text-4-bold">Classic Tiramisu</h3>
-                                        <span className="text-4-bold">1x</span> @ $5.50
-                                    </div>
-                                    <strong className="text-3">$5.50</strong>
-                                </li>
-                            </ul>
+                            <div id="summaryWrapper">
+                                <ul className="orderSummary">
+                                    <li>
+                                        <img src="/images/image-meringue-thumbnail.jpg" alt="Thumbnail"/>
+                                        <div>
+                                            <h3 className="text-4-bold">Classic Tiramisu</h3>
+                                            <span className="text-4-bold">1x</span> @ $5.50
+                                        </div>
+                                        <strong className="text-3">$5.50</strong>
+                                    </li>
+                                    <li>
+                                        <img src="/images/image-creme-brulee-thumbnail.jpg" alt="Thumbnail"/>
+                                        <div>
+                                            <h3 className="text-4-bold">Creme Brulee</h3>
+                                            <span className="text-4-bold">4x</span> @ $7.00
+                                        </div>
+                                        <strong className="text-3">$28.00</strong>
+                                    </li>
+                                </ul>
+                                <div id="summaryTotal">
+                                    <p className="text-4">Order Total</p>
+                                    <strong className="text-2">$46.50</strong>
+                                </div>
+                            </div>
+                            <button
+                                id="restartOrder"
+                                className="text-3"
+                                onClick={() => setIsOrderConfirmed(true)}
+                            >Start New Order</button>
                         </div>
                     </>
                 )}

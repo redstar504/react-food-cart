@@ -200,6 +200,10 @@ body {
     row-gap: 1em;
 }
 
+#cart p {
+    text-align: center;
+}
+
 #cart h2 {
     color: var(--red);
 }
@@ -277,6 +281,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    column-gap: .5em;
 }
 
 #cartFootnote p {
@@ -288,7 +293,7 @@ body {
     color: #fff;
     height: 3.25em;
     line-height: 3.25em;
-    border-radius: 1.25em;
+    border-radius: 1.5em;
 }
 
 @media (min-width: 688px) {
@@ -315,6 +320,7 @@ body {
     display: flex;
     flex-direction: column;
     row-gap: 1em;
+    overflow-y: auto;
 }
 
 .modal h2 + p {
@@ -326,11 +332,16 @@ body {
     height: 48px;
 }
 
-.orderSummary {
+#summaryWrapper {
     background: var(--rose-50);
-    display: flex;
     border-radius: 1em;
     padding: 1.5em;
+}
+
+.orderSummary {
+    display: flex;
+    flex-direction: column;
+    margin: -1.5em 0 1.5em;
 }
 
 .orderSummary li {
@@ -338,6 +349,8 @@ body {
     align-items: center;
     width: 100%;
     column-gap: 1em;
+    padding: 1.5em 0;
+    border-bottom: 1px solid var(--rose-100);
 }
 
 .orderSummary li strong {
@@ -357,4 +370,19 @@ body {
 
 .orderSummary li div span {
     color: var(--red);
+}
+
+#summaryTotal {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#restartOrder {
+    display: block;
+    background: var(--red);
+    color: #fff;
+    height: 3.25em;
+    line-height: 3.25em;
+    border-radius: 1.5em;
 }
