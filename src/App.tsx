@@ -1,7 +1,7 @@
 import './screen.css'
-import {useEffect, useRef, useState} from "react";
-import * as React from "react";
-import {ClipLoader} from "react-spinners";
+import {useEffect, useRef, useState} from "react"
+import * as React from "react"
+import {ClipLoader} from "react-spinners"
 
 type Product = {
     id: number
@@ -96,7 +96,7 @@ const products: Product[] = [
 function App() {
     const [cart, setCart] = useState<CartProduct[]>([])
     const [isOrderConfirmed, setIsOrderConfirmed] = useState(false)
-    const modalRef = useRef<HTMLDivElement>(null);
+    const modalRef = useRef<HTMLDivElement>(null)
 
     const isProductInCart = (productId: number) => !!cart.find(ci => ci.productId === productId)
     const numProductsInCart = (productId: number) => cart.find(ci => ci.productId === productId)?.quantity ?? 0
@@ -123,10 +123,10 @@ function App() {
     return (
         <>
             <div id="container" className={isOrderConfirmed ? 'confirming' : ''}>
+                <h1 className="text-1">
+                    Desserts
+                </h1>
                 <div id="productsWrapper">
-                    <h1 className="text-1">
-                        Desserts
-                    </h1>
                     <ul id="productList">
                         {products.map(product => (
                             <li key={product.id} className={isProductInCart(product.id) ? 'selected' : ''}>
@@ -210,48 +210,51 @@ function App() {
                 </div>
 
 
-                {cart.length > 0 ? (
-                    <div id="cart">
-                        <h2 className="text-2">Your Cart ({cart.length})</h2>
-                        <ul>
-                            {sortedCartItems.map(cartProduct => (
-                                <CartProduct
-                                    key={cartProduct.productId}
-                                    productId={cartProduct.productId}
-                                    quantity={cartProduct.quantity}
-                                    onDelete={() => {
-                                        setCart(cart => cart.filter(c => c.productId !== cartProduct.productId))
-                                    }}
-                                />
-                            ))}
-                        </ul>
+                <div id="cart">
+                    {cart.length > 0 ? (
+                        <>
+                            <h2 className="text-2">Your Cart ({cart.length})</h2>
+                            <ul>
+                                {sortedCartItems.map(cartProduct => (
+                                    <CartProduct
+                                        key={cartProduct.productId}
+                                        productId={cartProduct.productId}
+                                        quantity={cartProduct.quantity}
+                                        onDelete={() => {
+                                            setCart(cart => cart.filter(c => c.productId !== cartProduct.productId))
+                                        }}
+                                    />
+                                ))}
+                            </ul>
 
-                        <div id="cartTotal">
-                            <p className="text-4">Order Total</p>
-                            <strong
-                                className="text-2">${Number.isInteger(cartTotal) ? cartTotal : cartTotal.toFixed(2)}</strong>
-                        </div>
+                            <div id="cartTotal">
+                                <p className="text-4">Order Total</p>
+                                <strong
+                                    className="text-2">${Number.isInteger(cartTotal) ? cartTotal : cartTotal.toFixed(2)}</strong>
+                            </div>
 
-                        <div id="cartFootnote">
-                            <img src="/images/icon-carbon-neutral.svg" alt="Carbon Neutral"/>
-                            <p>This is a <strong className="text-4-bold ">carbon-neutral</strong> delivery.</p>
-                        </div>
+                            <div id="cartFootnote">
+                                <img src="/images/icon-carbon-neutral.svg" alt="Carbon Neutral"/>
+                                <p>This is a <strong className="text-4-bold ">carbon-neutral</strong> delivery.</p>
+                            </div>
 
-                        <button
-                            id="confirmOrder"
-                            className="text-3"
-                            onClick={() => setIsOrderConfirmed(true)}
-                        >
-                            Confirm Order
-                        </button>
-                    </div>
-                ) : (
-                    <div id="cart">
-                        <h2 className="text-2">Your Cart ({cart.length})</h2>
-                        <img id="emptyImg" src="/images/illustration-empty-cart.svg" alt="Empty cart"/>
-                        <p className="text-4-bold">Your added items will appear here.</p>
-                    </div>
-                )}
+                            <button
+                                id="confirmOrder"
+                                className="text-3"
+                                onClick={() => setIsOrderConfirmed(true)}
+                            >
+                                Confirm Order
+                            </button>
+                        </>
+                    ) : (
+                        <>
+                            <h2 className="text-2">Your Cart ({cart.length})</h2>
+                            <img id="emptyImg" src="/images/illustration-empty-cart.svg" alt="Empty cart"/>
+                            <p className="text-4-bold">Your added items will appear here.</p>
+                        </>
+                    )}
+                </div>
+
 
                 {isOrderConfirmed && (
                     <Modal
@@ -340,7 +343,7 @@ function Modal({cart, setCart, setIsOrderConfirmed, modalRef}: ModalPropsType) {
                     </>
                 ) : (
                     <>
-                        <ClipLoader />
+                        <ClipLoader/>
                         <h2 className="text-1">Confirming<br/> Your Order</h2>
 
                         <p>Please wait, this may take a moment...</p>
