@@ -68,6 +68,7 @@ body.lock {
 
 :root {
     --red: hsl(14, 86%, 42%);
+    --red-dark: hsl(14, 86%, 32%);
     --rose-900: hsl(14, 65%, 9%);
     --rose-500: hsl(12, 20%, 44%);
     --rose-400: hsl(7, 20%, 60%);
@@ -157,6 +158,10 @@ body {
     gap: .5em;
 }
 
+#productList li > button:hover {
+    color: var(--red);
+}
+
 #productList button span {
     display: block;
     width: 21px;
@@ -183,8 +188,18 @@ body {
     background: url(images/icon-decrement-quantity.svg) center center no-repeat;
 }
 
+#productList .cartControlButton button.decreaseQuantity:hover {
+    background-image: url(images/icon-decrement-quantity-hover.svg);
+    background-color: #fff;
+}
+
 #productList .cartControlButton button.increaseQuantity {
     background: url(images/icon-increment-quantity.svg) center center no-repeat;
+}
+
+#productList .cartControlButton button.increaseQuantity:hover {
+    background-image: url(images/icon-increment-quantity-hover.svg);
+    background-color: #fff;
 }
 
 #productList .price {
@@ -242,14 +257,29 @@ body {
 
 #cart li button {
     margin-left: auto;
-    width: 2em;
-    height: 2em;
+    width: 1.5em;
+    height: 1.5em;
     border-radius: 50%;
     border: 1px solid var(--rose-400);
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+}
+
+#cart li button:hover {
+    border-color: var(--rose-900);
+}
+
+#cart li button .xMark {
+    background: url(images/icon-remove-item.svg) center center no-repeat;
+    display: block;
+    width: 10px;
+    height: 10px;
+}
+
+#cart li button:hover .xMark {
+    background-image: url(images/icon-remove-item-hover.svg);
 }
 
 .cartQuantity {
@@ -300,6 +330,10 @@ body {
     height: 3.25em;
     line-height: 3.25em;
     border-radius: 1.5em;
+}
+
+#confirmOrder:hover {
+    background-color: var(--red-dark);
 }
 
 .modal {
@@ -402,6 +436,10 @@ body {
     height: 3.25em;
     line-height: 3.25em;
     border-radius: 1.5em;
+}
+
+#restartOrder:hover {
+    background-color: var(--red-dark);
 }
 
 @media (min-width: 32em) {

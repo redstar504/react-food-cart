@@ -379,7 +379,7 @@ function CartProduct({productId, quantity, onDelete}: { productId: number, quant
                 <strong className="text-4-bold">${subtotal.toFixed(2)}</strong>
             </div>
             <button onClick={handleDelete}>
-                <img src="/images/icon-remove-item.svg" alt="Remove item"/>
+                <span className="xMark"></span>
             </button>
         </li>
     ) : undefined
