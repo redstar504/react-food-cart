@@ -32,6 +32,62 @@ const products: Product[] = [
         price: 7.00,
         imageName: 'creme-brulee',
         quantityAvailable: 10
+    },
+    {
+        id: 3,
+        shortName: 'Macaron',
+        longName: 'Macaron Mix of Five',
+        price: 8.00,
+        imageName: 'macaron',
+        quantityAvailable: 10
+    },
+    {
+        id: 4,
+        shortName: 'Tiramisu',
+        longName: 'Classic Tiramisu',
+        price: 5.50,
+        imageName: 'tiramisu',
+        quantityAvailable: 10
+    },
+    {
+        id: 5,
+        shortName: 'Baklava',
+        longName: 'Pistachio Baklava',
+        price: 4.00,
+        imageName: 'baklava',
+        quantityAvailable: 10
+    },
+    {
+        id: 6,
+        shortName: 'Pie',
+        longName: 'Lemon Meringue Pie',
+        price: 5.00,
+        imageName: 'meringue',
+        quantityAvailable: 10
+    },
+    {
+        id: 7,
+        shortName: 'Cake',
+        longName: 'Red Velvet Cake',
+        price: 4.50,
+        imageName: 'cake',
+        quantityAvailable: 10
+    },
+    {
+        id: 8,
+        shortName: 'Brownie',
+        longName: 'Salted Caramel Brownie',
+        price: 5.50,
+        imageName: 'brownie',
+        quantityAvailable: 10
+    },
+    {
+        id: 9,
+        shortName: 'Panna Cotta',
+        longName: 'Vanilla Panna Cotta',
+        price: 6.50,
+        imageName: 'panna-cotta',
+        quantityAvailable: 10
     }
 ]
 
@@ -74,83 +130,85 @@ function App() {
     return (
         <>
             <div id="container" className={isOrderConfirmed ? 'confirming' : ''}>
-                <h1 className="text-1">
-                    Desserts
-                </h1>
+                <div id="productsWrapper">
+                    <h1 className="text-1">
+                        Desserts
+                    </h1>
+                    <ul id="productList">
+                        {products.map(product => (
+                            <li key={product.id} className={isProductInCart(product.id) ? 'selected' : ''}>
+                                <a href="#">
+                                    <picture>
+                                        <source srcSet={`images/image-${product.imageName}-desktop.jpg`}
+                                                media="(min-width: 768px)"/>
+                                        <source srcSet={`images/image-${product.imageName}-tablet.jpg`}
+                                                media="(min-width: 480px)"/>
+                                        <img src={`images/image-${product.imageName}-mobile.jpg`} alt="Waffle"/>
+                                    </picture>
+                                </a>
+                                {isProductInCart(product.id) ? (
+                                    <div className="cartControlButton">
+                                        <button
+                                            className="decreaseQuantity"
+                                            onClick={() => {
+                                                setCart(cart => {
+                                                    const currentItem = cart.find(c => c.productId === product.id)
+                                                    if (!currentItem) return cart
 
-                <ul id="productList">
-                    {products.map(product => (
-                        <li key={product.id} className={isProductInCart(product.id) ? 'selected' : ''}>
-                            <a href="#">
-                                <picture>
-                                    <source srcSet={`images/image-${product.imageName}-desktop.jpg`}
-                                            media="(min-width: 768px)"/>
-                                    <source srcSet={`images/image-${product.imageName}-tablet.jpg`}
-                                            media="(min-width: 480px)"/>
-                                    <img src={`images/image-${product.imageName}-mobile.jpg`} alt="Waffle"/>
-                                </picture>
-                            </a>
-                            {isProductInCart(product.id) ? (
-                                <div className="cartControlButton">
-                                    <button
-                                        className="decreaseQuantity"
-                                        onClick={() => {
-                                            setCart(cart => {
-                                                const currentItem = cart.find(c => c.productId === product.id)
-                                                if (!currentItem) return cart
+                                                    const otherItems = cart.filter(c => c.productId !== product.id)
+                                                    if (currentItem.quantity === 1) return otherItems
 
-                                                const otherItems = cart.filter(c => c.productId !== product.id)
-                                                if (currentItem.quantity === 1) return otherItems
+                                                    return [
+                                                        ...cart.filter(c => c.productId !== product.id),
+                                                        {
+                                                            ...currentItem,
+                                                            quantity: currentItem.quantity - 1
+                                                        }
+                                                    ]
+                                                })
+                                            }}
+                                        ></button>
+                                        {numProductsInCart(product.id)}
+                                        <button
+                                            className="increaseQuantity"
+                                            onClick={() => {
+                                                setCart(cart => {
+                                                    const currentItem = cart.find(c => c.productId === product.id)
+                                                    const quantityAvailable = products.find(p => p.id === product.id)?.quantityAvailable
+                                                    if (!currentItem || !quantityAvailable) return cart
 
-                                                return [
-                                                    ...cart.filter(c => c.productId !== product.id),
-                                                    {
-                                                        ...currentItem,
-                                                        quantity: currentItem.quantity - 1
-                                                    }
-                                                ]
-                                            })
-                                        }}
-                                    ></button>
-                                    {numProductsInCart(product.id)}
-                                    <button
-                                        className="increaseQuantity"
-                                        onClick={() => {
-                                            setCart(cart => {
-                                                const currentItem = cart.find(c => c.productId === product.id)
-                                                const quantityAvailable = products.find(p => p.id === product.id)?.quantityAvailable
-                                                if (!currentItem || !quantityAvailable) return cart
+                                                    const newQuantity = currentItem.quantity + 1
+                                                    if (newQuantity > quantityAvailable) return cart
 
-                                                const newQuantity = currentItem.quantity + 1
-                                                if (newQuantity > quantityAvailable) return cart
+                                                    return [
+                                                        ...cart.filter(c => c.productId !== product.id),
+                                                        {...currentItem, quantity: newQuantity}
+                                                    ]
+                                                })
+                                            }}
+                                        ></button>
+                                    </div>
+                                ) : (
+                                    <button onClick={() => {
+                                        setCart(cart => {
+                                            return [
+                                                ...cart,
+                                                {productId: product.id, quantity: 1}
+                                            ]
+                                        })
+                                    }}>
+                                        <span></span>
+                                        Add to Cart
+                                    </button>
+                                )}
+                                <small className="text-4">{product.shortName}</small>
+                                <h2 className="text-3">{product.longName}</h2>
+                                <p className="text-3 price">${product.price.toFixed(2)}</p>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
 
-                                                return [
-                                                    ...cart.filter(c => c.productId !== product.id),
-                                                    {...currentItem, quantity: newQuantity}
-                                                ]
-                                            })
-                                        }}
-                                    ></button>
-                                </div>
-                            ) : (
-                                <button onClick={() => {
-                                    setCart(cart => {
-                                        return [
-                                            ...cart,
-                                            {productId: product.id, quantity: 1}
-                                        ]
-                                    })
-                                }}>
-                                    <span></span>
-                                    Add to Cart
-                                </button>
-                            )}
-                            <small className="text-4">{product.shortName}</small>
-                            <h2 className="text-3">{product.longName}</h2>
-                            <p className="text-3 price">${product.price.toFixed(2)}</p>
-                        </li>
-                    ))}
-                </ul>
 
                 {cart.length > 0 ? (
                     <div id="cart">
@@ -218,6 +276,8 @@ type ModalPropsType = {
 }
 
 function Modal({cart, setCart, setIsOrderConfirmed, modalRef}: ModalPropsType) {
+    const [isConfirmed, setIsConfirmed] = useState(false)
+
     const handleClose = () => {
         const currentRef = modalRef.current
         if (!currentRef) return
@@ -228,45 +288,66 @@ function Modal({cart, setCart, setIsOrderConfirmed, modalRef}: ModalPropsType) {
         }, 200)
     }
 
+    useEffect(() => {
+        setTimeout(() => {
+            setIsConfirmed(true)
+        }, 50000)
+    }, [])
+
     return (
         <>
             <div id="overlay" onClick={handleClose}></div>
             <div className="modal" ref={modalRef}>
-                <img src="/images/icon-order-confirmed.svg" alt="Order confirmed"/>
-                <h2 className="text-1">Order<br/>Confirmed</h2>
-                <p>We hope you enjoy your food!</p>
-                <div id="summaryWrapper">
-                    <ul className="orderSummary">
-                        {cart.map(cartProduct => {
-                            const product = products.find(p => p.id === cartProduct.productId)
-                            if (!product) return
-                            const subtotal = product.price * cartProduct.quantity
+                {isConfirmed ? (
+                    <>
+                        <img src="/images/icon-order-confirmed.svg" alt="Order confirmed"/>
+                        <h2 className="text-1">Order<br/>Confirmed</h2>
+                        <p>We hope you enjoy your food!</p>
+                        {isConfirmed ? <p>Confirmed</p> : <p>Not confirmed</p>}
+                        <div id="summaryWrapper">
+                            <ul className="orderSummary">
+                                {cart.map(cartProduct => {
+                                    const product = products.find(p => p.id === cartProduct.productId)
+                                    if (!product) return
+                                    const subtotal = product.price * cartProduct.quantity
 
-                            return (
-                                <li key={cartProduct.productId}>
-                                    <img src="/images/image-meringue-thumbnail.jpg" alt="Thumbnail"/>
-                                    <div>
-                                        <h3 className="text-4-bold">{product.longName}</h3>
-                                        <span className="text-4-bold">{cartProduct.quantity}x</span> @ ${product.price.toFixed(2)}
-                                    </div>
-                                    <strong className="text-3">${subtotal.toFixed(2)}</strong>
-                                </li>
-                            )
-                        })}
-                    </ul>
-                    <div id="summaryTotal">
-                        <p className="text-4">Order Total</p>
-                        <strong className="text-2">$46.50</strong>
-                    </div>
-                </div>
-                <button
-                    id="restartOrder"
-                    className="text-3"
-                    onClick={() => {
-                        setCart([])
-                        handleClose()
-                    }}
-                >Start New Order</button>
+                                    return (
+                                        <li key={cartProduct.productId}>
+                                            <img src="/images/image-meringue-thumbnail.jpg" alt="Thumbnail"/>
+                                            <div>
+                                                <h3 className="text-4-bold">{product.longName}</h3>
+                                                <span className="text-4-bold">{cartProduct.quantity}x</span> @
+                                                ${product.price.toFixed(2)}
+                                            </div>
+                                            <strong className="text-3">${subtotal.toFixed(2)}</strong>
+                                        </li>
+                                    )
+                                })}
+                            </ul>
+                            <div id="summaryTotal">
+                                <p className="text-4">Order Total</p>
+                                <strong className="text-2">$46.50</strong>
+                            </div>
+                        </div>
+                        <button
+                            id="restartOrder"
+                            className="text-3"
+                            onClick={() => {
+                                setCart([])
+                                handleClose()
+                            }}
+                        >Start New Order
+                        </button>
+                    </>
+                ) : (
+                    <>
+                        <img src="/images/icon-order-confirmed.svg" alt="Order confirmed"/>
+                        <h2 className="text-1">Confirming<br/> Your Order</h2>
+
+                        <p>Please wait, this may take a moment...</p>
+                    </>
+                )}
+
             </div>
         </>
     )
