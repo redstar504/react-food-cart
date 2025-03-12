@@ -1,6 +1,7 @@
 import './screen.css'
 import {useEffect, useRef, useState} from "react";
 import * as React from "react";
+import {ClipLoader} from "react-spinners";
 
 type Product = {
     id: number
@@ -14,6 +15,7 @@ type Product = {
 type CartProduct = {
     productId: number
     quantity: number
+    timestamp: number
 }
 
 const products: Product[] = [
@@ -91,20 +93,9 @@ const products: Product[] = [
     }
 ]
 
-const initialCart: CartProduct[] = [
-    {
-        productId: 1,
-        quantity: 2,
-    },
-    {
-        productId: 2,
-        quantity: 1,
-    }
-]
-
 function App() {
-    const [cart, setCart] = useState<CartProduct[]>(initialCart)
-    const [isOrderConfirmed, setIsOrderConfirmed] = useState(true)
+    const [cart, setCart] = useState<CartProduct[]>([])
+    const [isOrderConfirmed, setIsOrderConfirmed] = useState(false)
     const modalRef = useRef<HTMLDivElement>(null);
 
     const isProductInCart = (productId: number) => !!cart.find(ci => ci.productId === productId)
@@ -127,6 +118,8 @@ function App() {
         }
     }, [isOrderConfirmed])
 
+    const sortedCartItems = [...cart].sort((a, b) => a.timestamp - b.timestamp)
+
     return (
         <>
             <div id="container" className={isOrderConfirmed ? 'confirming' : ''}>
@@ -139,11 +132,18 @@ function App() {
                             <li key={product.id} className={isProductInCart(product.id) ? 'selected' : ''}>
                                 <a href="#">
                                     <picture>
-                                        <source srcSet={`images/image-${product.imageName}-desktop.jpg`}
-                                                media="(min-width: 768px)"/>
-                                        <source srcSet={`images/image-${product.imageName}-tablet.jpg`}
-                                                media="(min-width: 480px)"/>
-                                        <img src={`images/image-${product.imageName}-mobile.jpg`} alt="Waffle"/>
+                                        <source
+                                            srcSet={`images/image-${product.imageName}-desktop.jpg`}
+                                            media="(min-width: 32em)"
+                                        />
+                                        <source
+                                            srcSet={`images/image-${product.imageName}-tablet.jpg`}
+                                            media="(min-width: 60em)"
+                                        />
+                                        <img
+                                            src={`images/image-${product.imageName}-mobile.jpg`}
+                                            alt="Waffle"
+                                        />
                                     </picture>
                                 </a>
                                 {isProductInCart(product.id) ? (
@@ -193,7 +193,7 @@ function App() {
                                         setCart(cart => {
                                             return [
                                                 ...cart,
-                                                {productId: product.id, quantity: 1}
+                                                {productId: product.id, quantity: 1, timestamp: Date.now()}
                                             ]
                                         })
                                     }}>
@@ -214,7 +214,7 @@ function App() {
                     <div id="cart">
                         <h2 className="text-2">Your Cart ({cart.length})</h2>
                         <ul>
-                            {cart.map(cartProduct => (
+                            {sortedCartItems.map(cartProduct => (
                                 <CartProduct
                                     key={cartProduct.productId}
                                     productId={cartProduct.productId}
@@ -291,7 +291,7 @@ function Modal({cart, setCart, setIsOrderConfirmed, modalRef}: ModalPropsType) {
     useEffect(() => {
         setTimeout(() => {
             setIsConfirmed(true)
-        }, 50000)
+        }, 5000)
     }, [])
 
     return (
@@ -301,9 +301,8 @@ function Modal({cart, setCart, setIsOrderConfirmed, modalRef}: ModalPropsType) {
                 {isConfirmed ? (
                     <>
                         <img src="/images/icon-order-confirmed.svg" alt="Order confirmed"/>
-                        <h2 className="text-1">Order<br/>Confirmed</h2>
+                        <h2 className="text-1">Order Confirmed</h2>
                         <p>We hope you enjoy your food!</p>
-                        {isConfirmed ? <p>Confirmed</p> : <p>Not confirmed</p>}
                         <div id="summaryWrapper">
                             <ul className="orderSummary">
                                 {cart.map(cartProduct => {
@@ -341,7 +340,7 @@ function Modal({cart, setCart, setIsOrderConfirmed, modalRef}: ModalPropsType) {
                     </>
                 ) : (
                     <>
-                        <img src="/images/icon-order-confirmed.svg" alt="Order confirmed"/>
+                        <ClipLoader />
                         <h2 className="text-1">Confirming<br/> Your Order</h2>
 
                         <p>Please wait, this may take a moment...</p>
