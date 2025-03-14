@@ -120,6 +120,17 @@ function App() {
 
     const sortedCartItems = [...cart].sort((a, b) => a.timestamp - b.timestamp)
 
+    const addProductToCart = (product: Product) => {
+        if (isProductInCart(product.id)) return
+
+        setCart(cart => {
+            return [
+                ...cart,
+                {productId: product.id, quantity: 1, timestamp: Date.now()}
+            ]
+        })
+    }
+
     return (
         <>
             <div id="container" className={isOrderConfirmed ? 'confirming' : ''}>
@@ -130,7 +141,10 @@ function App() {
                     <ul id="productList">
                         {products.map(product => (
                             <li key={product.id} className={isProductInCart(product.id) ? 'selected' : ''}>
-                                <a href="#">
+                                <a href="#" onClick={e => {
+                                    e.preventDefault()
+                                    addProductToCart(product)
+                                }}>
                                     <picture>
                                         <source
                                             srcSet={`images/image-${product.imageName}-desktop.jpg`}
@@ -189,14 +203,7 @@ function App() {
                                         ></button>
                                     </div>
                                 ) : (
-                                    <button onClick={() => {
-                                        setCart(cart => {
-                                            return [
-                                                ...cart,
-                                                {productId: product.id, quantity: 1, timestamp: Date.now()}
-                                            ]
-                                        })
-                                    }}>
+                                    <button onClick={() => addProductToCart(product)}>
                                         <span></span>
                                         Add to Cart
                                     </button>
